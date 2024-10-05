@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({
-  path: "../.env.dev",
+  path: "./env/.env.dev",
 });
 
 const DB_URL = process.env.DB_URL;
