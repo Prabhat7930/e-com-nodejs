@@ -10,6 +10,7 @@ const connectDB = async () => {
   try {
     await mongoose.connect(DB_URL, {
       dbName: "e-com-database",
+      connectTimeoutMS: 20000,
     });
     console.log("connected to DB");
   } catch (err) {

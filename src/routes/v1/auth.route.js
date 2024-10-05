@@ -1,7 +1,13 @@
 import express from "express";
 import User from "../../models/user.model.js";
 import bcrypt from "bcrypt";
+import jsonwebtoken from "jsonwebtoken";
+import dotenv from "dotenv";
 const authRoutes = express.Router();
+const jwt = jsonwebtoken;
+dotenv.config({
+  path: "./env/.env.dev",
+});
 
 authRoutes.get("/", async (req, res) => {
   res.status(200).send("this is auth route");
@@ -54,9 +60,7 @@ authRoutes.post("/sign-in", async (req, res) => {
   }
 
   try {
-    const { email, passwd } = req.body;
-
-    const existingUser = await User.findOne({ email: email });
+    const existingUser = await User.findOne({ email: req.body.email });
     if (!existingUser) {
       return res.status(404).json({
         message: "User with this email not found.....please register",
@@ -64,7 +68,7 @@ authRoutes.post("/sign-in", async (req, res) => {
       });
     }
 
-    if (!compareHash(passwd, existingUser.password)) {
+    if (!(await compareHash(req.body.password, existingUser.password))) {
       return res.status(403).json({
         message: "Wrong password",
         success: false,
@@ -73,9 +77,20 @@ authRoutes.post("/sign-in", async (req, res) => {
 
     const { password, ...userData } = existingUser._doc;
 
+    const token = jwt.sign(
+      {
+        userId: existingUser._id,
+        isAdmin: existingUser.isAdmin,
+      },
+      process.env.JWT_TOKEN,
+      {
+        expiresIn: "5d",
+      }
+    );
+
     return res.status(200).json({
       message: "welcome",
-      data: userData,
+      data: { userData, token },
       success: false,
       error: {},
     });
