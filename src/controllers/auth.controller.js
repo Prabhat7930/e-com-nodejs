@@ -7,6 +7,10 @@ dotenv.config({
   path: "./env/.env.dev",
 });
 
+export const getAuth = async (req, res) => {
+  res.status(200).send("this is auth route");
+};
+
 export const signUp = async (req, res) => {
   if (!req.body) {
     return res.status(401).json({
