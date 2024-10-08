@@ -2,6 +2,7 @@ import express from "express";
 import {
   deleteUserById,
   getAdminById,
+  getAllUsers,
   updateUserById,
 } from "../../controllers/user.controller.js";
 import { verifyJWT } from "../../middlewares/verifyJWT.js";
@@ -15,5 +16,6 @@ userRoutes.get("/", async (req, res) => {
 userRoutes.put("/update/:id", verifyJWT, updateUserById);
 userRoutes.delete("/delete/:id", verifyAdmin, deleteUserById);
 userRoutes.get("/get-admin/:id", verifyAdmin, getAdminById);
+userRoutes.get("/get-all", verifyJWT, getAllUsers);
 
 export default userRoutes;

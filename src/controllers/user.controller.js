@@ -104,3 +104,41 @@ export const getAdminById = async (req, res) => {
     });
   }
 };
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+
+    if (!users) {
+      res.status(404).json({
+        message: "no users are there",
+        success: false,
+        error: {},
+      });
+    }
+
+    const secureUsers = [];
+    users.forEach((user) => {
+      const { password, ...userData } = user._doc;
+      console.log(userData);
+      secureUsers.push(userData);
+    });
+
+    console.log(secureUsers);
+
+    res.status(200).json({
+      message: "All users fetched",
+      data: secureUsers,
+      sucess: true,
+      error: {},
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "internal server error",
+      data: null,
+      success: false,
+      error: err,
+    });
+  }
+};
