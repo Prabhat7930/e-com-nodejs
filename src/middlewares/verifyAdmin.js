@@ -2,7 +2,6 @@ import { verifyJWT } from "./verifyJWT.js";
 
 export const verifyAdmin = (req, res, next) => {
   verifyJWT(req, res, () => {
-    console.log(req.user);
     if (req.user.isAdmin) {
       next();
     } else {

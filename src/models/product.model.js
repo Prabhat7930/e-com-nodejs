@@ -26,8 +26,8 @@ const productModel = new Schema(
     size: {
       type: String,
     },
-    color: {
-      type: String,
+    colors: {
+      type: [String],
     },
   },
   {

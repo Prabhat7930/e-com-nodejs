@@ -115,7 +115,7 @@ export const getAllUsers = async (req, res) => {
         : await User.find();
 
     if (!users) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "no users are there",
         success: false,
         error: {},
@@ -128,7 +128,7 @@ export const getAllUsers = async (req, res) => {
       secureUsers.push(userData);
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "All users fetched",
       data: secureUsers,
       sucess: true,
@@ -136,7 +136,7 @@ export const getAllUsers = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    return res.status(500).json({
       message: "internal server error",
       data: null,
       success: false,
@@ -169,7 +169,7 @@ export const getUserStats = async (req, res) => {
       },
     ]);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "these are the user stats from the last year",
       data: userStats,
       success: true,
@@ -177,7 +177,7 @@ export const getUserStats = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    return res.status(500).json({
       message: "internal server error",
       success: false,
       error: err,
@@ -186,7 +186,6 @@ export const getUserStats = async (req, res) => {
 };
 
 const getMonthName = (month) => {
-  console.log(month);
   switch (parseInt(month)) {
     case 1:
       return "january";
