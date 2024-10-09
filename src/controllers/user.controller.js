@@ -106,8 +106,13 @@ export const getAdminById = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
+  const query = req.query.latest;
+
   try {
-    const users = await User.find();
+    const users =
+      query != "false" && query != ""
+        ? await User.find().limit(2).sort({ createdAt: "desc" })
+        : await User.find();
 
     if (!users) {
       res.status(404).json({
@@ -120,11 +125,8 @@ export const getAllUsers = async (req, res) => {
     const secureUsers = [];
     users.forEach((user) => {
       const { password, ...userData } = user._doc;
-      console.log(userData);
       secureUsers.push(userData);
     });
-
-    console.log(secureUsers);
 
     res.status(200).json({
       message: "All users fetched",
