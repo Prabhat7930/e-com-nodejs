@@ -3,6 +3,7 @@ import {
   deleteUserById,
   getAdminById,
   getAllUsers,
+  getUserStats,
   updateUserById,
 } from "../../controllers/user.controller.js";
 import { verifyJWT } from "../../middlewares/verifyJWT.js";
@@ -17,5 +18,6 @@ userRoutes.put("/update/:id", verifyJWT, updateUserById);
 userRoutes.delete("/delete/:id", verifyAdmin, deleteUserById);
 userRoutes.get("/get-admin/:id", verifyAdmin, getAdminById);
 userRoutes.get("/get-all", verifyJWT, getAllUsers);
+userRoutes.get("/stats", verifyAdmin, getUserStats);
 
 export default userRoutes;

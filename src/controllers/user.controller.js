@@ -144,3 +144,75 @@ export const getAllUsers = async (req, res) => {
     });
   }
 };
+
+export const getUserStats = async (req, res) => {
+  try {
+    const date = new Date();
+    const lastYear = new Date(date.setFullYear(date.getFullYear) - 1);
+
+    const userStats = await User.aggregate([
+      {
+        $match: { createdAt: { $gte: lastYear } },
+      },
+      {
+        $project: {
+          month: {
+            $month: "$createdAt",
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      message: "these are the user stats from the last year",
+      data: userStats,
+      success: true,
+      error: {},
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "internal server error",
+      success: false,
+      error: err,
+    });
+  }
+};
+
+const getMonthName = (month) => {
+  console.log(month);
+  switch (parseInt(month)) {
+    case 1:
+      return "january";
+    case 2:
+      return "february";
+    case 3:
+      return "march";
+    case 4:
+      return "april";
+    case 5:
+      return "may";
+    case 6:
+      return "june";
+    case 7:
+      return "july";
+    case 8:
+      return "august";
+    case 9:
+      return "september";
+    case 10:
+      return "october";
+    case 11:
+      return "november";
+    case 12:
+      return "december";
+    default:
+      return "";
+  }
+};
