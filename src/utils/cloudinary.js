@@ -13,9 +13,11 @@ v2.config({
 const storage = new CloudinaryStorage({
   cloudinary: v2,
   params: {
-    folder: "",
+    folder: "e-com-products",
     resource_type: "image",
-    public_id: (req, res) => "computer-filename-using-request",
+    public_id: (req, res) => {
+      console.log(req.file);
+    },
   },
 });
 

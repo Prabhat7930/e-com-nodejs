@@ -2,10 +2,13 @@ import express from "express";
 import {
   createProduct,
   deleteProductById,
+  getAllProducts,
+  getProductById,
   updateProduct,
 } from "../../controllers/product.controller.js";
 import { verifyAdmin } from "../../middlewares/verifyAdmin.js";
 import { parser } from "../../utils/cloudinary.js";
+import { verifyJWT } from "../../middlewares/verifyJWT.js";
 const productRoutes = express.Router();
 
 productRoutes.get("/", async (req, res) => {
@@ -26,5 +29,7 @@ productRoutes.put(
   updateProduct
 );
 productRoutes.delete("/delete/:id", verifyAdmin, deleteProductById);
+productRoutes.get("/get-product/:id", verifyJWT, getProductById);
+productRoutes.get("/get-all", verifyJWT, getAllProducts);
 
 export default productRoutes;
