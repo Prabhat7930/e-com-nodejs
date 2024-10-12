@@ -37,5 +37,5 @@ const orderModel = new Schema(
   }
 );
 
-const Order = mongoose.model("cart", orderModel);
+const Order = mongoose.model("order", orderModel);
 export default Order;

@@ -1,20 +1,13 @@
-import Product from "../models/product.model.js";
+import Cart from "../models/cart.model.js";
 
-export const createProduct = async (req, res) => {
-  console.log(req.file);
-  if (!req.file) {
-    return res.status(403).json({
-      message: "send the image",
-    });
-  }
-
+export const addToCart = async (req, res) => {
   try {
-    const newProduct = new Product({ ...req.body, image: req.file.path });
-    await newProduct.save();
+    const cartItem = new Cart(req.body);
+    await cartItem.save();
 
     res.status(201).json({
-      message: "Procuct created successfully",
-      data: newProduct,
+      message: "Cart created successfully",
+      data: cartItem,
       success: false,
       error: {},
     });
@@ -29,7 +22,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const updateProduct = async (req, res) => {
+export const updateCart = async (req, res) => {
   if (!req.body) {
     return res.status(403).json({
       message: "Need data to update",
@@ -40,7 +33,7 @@ export const updateProduct = async (req, res) => {
   }
 
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(
+    const updatedCart = await Cart.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -51,8 +44,8 @@ export const updateProduct = async (req, res) => {
     );
 
     return res.status(201).json({
-      message: "product updated successfully",
-      data: updatedProduct,
+      message: "Cart updated successfully",
+      data: updatedCart,
       success: true,
       error: null,
     });
@@ -66,11 +59,11 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-export const deleteProductById = async (req, res) => {
+export const deleteCartById = async (req, res) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    const deletedCart = await Cart.findByIdAndDelete(req.params.id);
 
-    if (!deletedProduct) {
+    if (!deletedCart) {
       return res.status(404).json({
         message: "not found",
         data: null,
@@ -80,8 +73,8 @@ export const deleteProductById = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "product deleted successfully",
-      data: deletedProduct,
+      message: "Cart deleted successfully",
+      data: deletedCart,
       success: true,
       error: {},
     });
@@ -95,12 +88,12 @@ export const deleteProductById = async (req, res) => {
   }
 };
 
-export const getProductById = async (req, res) => {
+export const getUserCartItem = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
+    const cart = await Cart.findOne({ userId: req.params.id });
+    if (!cart) {
       return res.status(404).json({
-        message: "product not found",
+        message: "Cart not found",
         data: null,
         success: false,
         error: {},
@@ -108,8 +101,8 @@ export const getProductById = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "product fetched",
-      data: product,
+      message: "Cart fetched",
+      data: cart,
       success: true,
       error: {},
     });
@@ -124,26 +117,13 @@ export const getProductById = async (req, res) => {
   }
 };
 
-export const getAllProducts = async (req, res) => {
-  const latest = req.query.latest;
-  const category = req.query.category;
+export const getCartItems = async (req, res) => {
   try {
-    let products;
-    if (latest && category == "") {
-      products = await Product.find().sort({ createdAt: "desc" }).limit(2);
-    } else if (category) {
-      products = await Product.find({
-        categories: {
-          $in: [category],
-        },
-      });
-    } else {
-      products = await Product.find();
-    }
+    const cartItems = await Cart.find();
 
-    if (products.length == 0) {
+    if (cartItems.length == 0) {
       return res.status(404).json({
-        message: "product not found",
+        message: "Cart not found",
         data: null,
         success: false,
         error: {},
@@ -151,8 +131,8 @@ export const getAllProducts = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "product fetched",
-      data: products,
+      message: "Cart fetched",
+      data: cartItems,
       success: true,
       error: {},
     });

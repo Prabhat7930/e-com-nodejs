@@ -15,9 +15,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "e-com-products",
     resource_type: "image",
-    public_id: (req, res) => {
-      console.log(req.file);
-    },
+    public_id: (req, res) => {},
   },
 });
 
